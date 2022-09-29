@@ -1,25 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Name: </h5>
-<b>{{name}}</b>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Swastika Nata</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
+            <form class="d-flex ms-auto" role="search">
+                <a class="btn btn-outline-danger" href="{% url 'wishlist:logout' %}" role="button">Logout</a>
+            </form>
+        </div>
+    </div>
+</nav>
 
-<table>
-    <tr>
-    <th>Item Name</th>
-    <th>Item Price</th>
-    <th>Description</th>
-    </tr>
-    {% comment %} Add the data below this line {% endcomment %}
-    {% for item in list_item %}
+<div class="m-3">
+    <h2>Name: {{name}}</h2>
+
+    <table class="katalog mt-3">
         <tr>
-            <th>{{item.item_name}}</th>
-            <th>{{item.item_price}}</th>
-            <th>{{item.description}}</th>
+        <th>Item Name</th>
+        <th>Item Price</th>
+        <th>Description</th>
         </tr>
-    {% endfor %}
-</table>
-<h5>Last Login: {{ last_login }}</h5>
-<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+    
+        {% for item in list_item %}
+            <tr>
+                <td>{{item.item_name}}</td>
+                <td>{{item.item_price}}</td>
+                <td>{{item.description}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p class="mt-3">Last Login: {{ last_login }}</p>
+</div>
+
 
 {% endblock content %}
