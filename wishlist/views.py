@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from wishlist.models import ItemWishlist
 
 # Create your views here.
@@ -25,6 +26,7 @@ def show_wishlist_ajax(request):
     return render(request, "wishlist_ajax.html")
 
 @login_required(login_url='/wishlist/login/')
+@csrf_exempt
 def create_wishlist_ajax(request):
     if request.method == "POST":
         item_name = request.POST.get("item_name")

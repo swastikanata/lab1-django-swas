@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block meta %}
+<title>Wishlist</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    
-    $(document).ready(function(){
+
+    function updateTable() {
         $.get("http://127.0.0.1:8000/wishlist/json/", function(data) {
             
             for (i = 0; i < data.length; i++) {
@@ -22,26 +23,44 @@
                 $(".katalog").append(row);
             }
         });
-    });
-
-    $("#create").click(function() {
-        var item_name = $("#item_name").val();
-        var item_price = $("#item_price").val();
-        var description = $("#description").val();
-
-        $.post("http://localhost:8000/wishlist/ajax/submit/",
-        {
-            item_name,
-            item_price,
-            description,
-        },
-        function(data, status){
-        console.log("add wishlist success");
+    }
+    $(document).ready(function(){
         updateTable();
-        $("#item_name").val("");
-        $("#item_price").val("");
-        $("#description").val("");
-      });
+        $("#add_wishlist").click(function(){
+            var item_name = $("#item_name").val();
+            var item_price = parseInt($("#item_price").val());
+            var description = $("#description").val();
+
+            if (item_name != null && item_price >= 0 && description != null) {
+                
+            
+            $.post("http://127.0.0.1:8000/wishlist/ajax/submit/",
+            {
+                item_name,
+                item_price,
+                description,
+            },
+            function(data, status){
+                console.log("add wishlist success");
+
+                var tr = document.createElement("tr");
+                var tdNama = document.createElement("td");
+                tdNama.append(item_name);
+                var tdHarga = document.createElement("td");
+                tdHarga.append(item_price);
+                var tdDeskripsi = document.createElement("td");
+                tdDeskripsi.append(description);
+                
+                tr.append(tdNama);
+                tr.append(tdHarga);
+                tr.append(tdDeskripsi);
+                
+                $(".katalog").append(tr);
+
+                
+            });
+            }
+        });
     });
     
 </script>
@@ -72,24 +91,25 @@
             <table>
                 <tr>
                     <td>Item name: </td>
-                    <td><input type="text" id="item_name" name="item_name" placeholder="Item Name" class="form-control"></td>
+                    <td><input type="text" id="item_name" name="item_name" placeholder="Item Name" class="form-control" required></td>
                 </tr>
                         
                 <tr>
                     <td>Item price: </td>
-                    <td><input type="text" id="item_price" name="item_price" placeholder="Item Price" class="form-control"></td>
+                    <td><input type="number" id="item_price" name="item_price" placeholder="Item Price" class="form-control" required></td>
                 </tr>
                 <tr>
                     <td>Description: </td>
-                    <td><input type="text" id="description" name="description" placeholder="Description" class="form-control"></td>
+                    <td><input type="text" id="description" name="description" placeholder="Description" class="form-control" required></td>
                 </tr>
     
                 <tr>
                     <td></td>
-                    <td><input class="btn login_btn btn-outline-dark" id="create" type="submit" value="Submit"></td>
                 </tr>
             </table>
+            <button id="add_wishlist" class="btn border rounded" type="button">Tambah</button>
         </form>
+        
     
         {% if messages %}
             <ul>
