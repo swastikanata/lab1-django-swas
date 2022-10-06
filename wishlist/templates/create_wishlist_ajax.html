@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    
+    
+</script>
+<title>Create</title>
+{% endblock meta %}
+
+
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Swastika Nata</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
+            <form class="d-flex ms-auto" role="search">
+                <a class="btn btn-outline-danger" href="{% url 'wishlist:logout' %}" role="button">Logout</a>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class = "create">
+
+    <h1>Create Wishlist</h1>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Item name: </td>
+                <td><input type="text" name="item_name" placeholder="Item Name" class="form-control"></td>
+            </tr>
+                    
+            <tr>
+                <td>Item price: </td>
+                <td><input type="text" name="item_price" placeholder="Item Price" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>Description: </td>
+                <td><input type="text" name="description" placeholder="Description" class="form-control"></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><input class="btn login_btn btn-outline-dark" type="submit" value="Submit"></td>
+            </tr>
+        </table>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}     
+
+</div>
+{% endblock content %}

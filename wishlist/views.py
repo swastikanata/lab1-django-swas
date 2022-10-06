@@ -1,7 +1,7 @@
 import datetime
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -19,6 +19,22 @@ def show_wishlist(request):
         'last_login': request.COOKIES['last_login'],
     }
     return render(request, "wishlist.html", context)
+
+@login_required(login_url='/wishlist/login/')
+def show_wishlist_ajax(request):
+    return render(request, "wishlist_ajax.html")
+
+@login_required(login_url='/wishlist/login/')
+def create_wishlist_ajax(request):
+    if request.method == "POST":
+        item_name = request.POST.get("item_name")
+        item_price = request.POST.get("item_price")
+        description = request.POST.get("description")
+        ItemWishlist.objects.create(item_name=item_name, item_price=item_price, description=description)
+        return HttpResponse()
+       
+    else:
+        return redirect("wishlist:show_wishlist_ajax'")
 
 def show_xml(request):
     data = ItemWishlist.objects.all()

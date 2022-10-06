@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    
+    $(document).ready(function(){
+        $.get("http://127.0.0.1:8000/wishlist/json/", function(data) {
+            
+            for (i = 0; i < data.length; i++) {
+                var nama = document.createElement("td");
+                nama.append(data[i].fields.item_name);
+                var harga = document.createElement("td");
+                harga.append(data[i].fields.item_price);
+                var desc = document.createElement("td");
+                desc.append(data[i].fields.description);
+                var row = document.createElement("tr");
+                row.append(nama);
+                row.append(harga);
+                row.append(desc)
+                
+                $(".katalog").append(row);
+            }
+        });
+    });
+
+    $("#create").click(function() {
+        var item_name = $("#item_name").val();
+        var item_price = $("#item_price").val();
+        var description = $("#description").val();
+
+        $.post("http://localhost:8000/wishlist/ajax/submit/",
+        {
+            item_name,
+            item_price,
+            description,
+        },
+        function(data, status){
+        console.log("add wishlist success");
+        updateTable();
+        $("#item_name").val("");
+        $("#item_price").val("");
+        $("#description").val("");
+      });
+    });
+    
+</script>
+{% endblock meta %}
+
+
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Swastika Nata</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
+            <form class="d-flex ms-auto" role="search">
+                <a class="btn btn-outline-danger" href="{% url 'wishlist:logout' %}" role="button">Logout</a>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="m-3">
+
+    <div class = "create">
+
+        <p>Create Wishlist</p>
+    
+        <form method="POST" action="">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Item name: </td>
+                    <td><input type="text" id="item_name" name="item_name" placeholder="Item Name" class="form-control"></td>
+                </tr>
+                        
+                <tr>
+                    <td>Item price: </td>
+                    <td><input type="text" id="item_price" name="item_price" placeholder="Item Price" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>Description: </td>
+                    <td><input type="text" id="description" name="description" placeholder="Description" class="form-control"></td>
+                </tr>
+    
+                <tr>
+                    <td></td>
+                    <td><input class="btn login_btn btn-outline-dark" id="create" type="submit" value="Submit"></td>
+                </tr>
+            </table>
+        </form>
+    
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}     
+    
+    </div>
+
+
+    <table class="katalog mt-3" id="table">
+        <tr>
+        <th>Item Name</th>
+        <th>Item Price</th>
+        <th>Description</th>
+        </tr>
+    </table>
+    <p class="mt-3">Last Login: {{ last_login }}</p>
+</div>
+{% endblock content %}
